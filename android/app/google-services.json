@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "91020317837",
+    "firebase_url": "https://fir-test-e4ba6.firebaseio.com",
+    "project_id": "fir-test-e4ba6",
+    "storage_bucket": "fir-test-e4ba6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91020317837:android:0ab840eb3c8cb9d146bec4",
+        "android_client_info": {
+          "package_name": "com.example.tyba_todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91020317837-vbbtg32qm730ub78m6n0skje94n15bph.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC37k0d7BHk4DtZtFqm3aUkrcPN2fkd2Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91020317837-vbbtg32qm730ub78m6n0skje94n15bph.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91020317837-d3tbvlgtb1008a0clt1mpjkmtca3nkce.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tybaTodo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
