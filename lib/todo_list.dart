@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tyba_todo/audio/simple_recorder.dart';
 import 'package:tyba_todo/model/todo.dart';
 import 'package:tyba_todo/services/database_services.dart';
+import 'package:tyba_todo/utils/constants.dart';
 
 class TodoList extends StatefulWidget {
   @override
@@ -11,12 +12,15 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   final _formKey = GlobalKey<FormState>();
+
   dynamic _formValues = {
     'uid': '',
     'title': '',
     'description': '',
-    'audioRef': null
+    'audioRef': null,
+    'isComplete': false
   };
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -29,7 +33,7 @@ class _TodoListState extends State<TodoList> {
                 return const Center(
                     child: Text(
                   'There isnt data available',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: COLOR_TEXT),
                 ));
               }
               List<TaskEntity> tasks = snapshot.data as List<TaskEntity>;
@@ -57,13 +61,11 @@ class _TodoListState extends State<TodoList> {
                             background: Container(
                               padding: const EdgeInsets.only(left: 20),
                               alignment: Alignment.centerLeft,
-                              color: Colors.red,
+                              color: Colors.redAccent,
                               child: const Icon(Icons.delete),
                             ),
-                            onDismissed: (direction) async {
-                              await DatabaseService()
-                                  .removeTodo(tasks[index].uid);
-                              //
+                            onDismissed: (direction) {
+                              DatabaseService().removeTodo(tasks[index].uid);
                             },
                             child: _item(tasks, index, context, width),
                           );
@@ -84,10 +86,11 @@ class _TodoListState extends State<TodoList> {
               'uid': null,
               'title': '',
               'description': '',
-              'audioRef': null
+              'audioRef': null,
+              'isComplete': false
             };
           });
-          _formTask(context, width, 'create');
+          _formTask(context, width, FormAction.create);
         },
         child: const Icon(Icons.add),
       ),
@@ -99,7 +102,7 @@ class _TodoListState extends State<TodoList> {
       'All Tasks',
       style: TextStyle(
         fontSize: 30,
-        color: Colors.white,
+        color: COLOR_TEXT,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -114,15 +117,16 @@ class _TodoListState extends State<TodoList> {
             'uid': tasks[index].uid,
             'title': tasks[index].title,
             'description': tasks[index].description,
-            'audioRef': tasks[index].audioRef
+            'audioRef': tasks[index].audioRef, 
+            'isComplete': tasks[index].isComplete,
           };
         });
-        _formTask(context, width, 'edit');
+        _formTask(context, width, FormAction.edit);
       },
       leading: GestureDetector(
         onTap: () {
-          DatabaseService().updateTask(
-              tasks[index].uid, {'isComplete': !tasks[index].isComplete});
+          tasks[index].isComplete = !tasks[index].isComplete;
+          DatabaseService().updateTask(tasks[index].uid, tasks[index]);
         },
         child: Container(
           padding: const EdgeInsets.all(2),
@@ -135,7 +139,7 @@ class _TodoListState extends State<TodoList> {
           child: tasks[index].isComplete
               ? const Icon(
                   Icons.check,
-                  color: Colors.white,
+                  color: COLOR_ICON,
                 )
               : Container(),
         ),
@@ -144,15 +148,16 @@ class _TodoListState extends State<TodoList> {
         tasks[index].title,
         style: TextStyle(
           fontSize: 20,
-          color: Colors.grey[200],
+          color: COLOR_TEXT_LIGHT,
           fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
 
-  Future<dynamic> _formTask(BuildContext context, double width, action) {
-    String text = action == 'create' ? 'Add task' : 'Edit task';
+  Future<dynamic> _formTask(
+      BuildContext context, double width, FormAction action) {
+    String actionText = action == FormAction.create ? 'Add task' : 'Edit task';
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -161,25 +166,25 @@ class _TodoListState extends State<TodoList> {
             horizontal: 25,
             vertical: 20,
           ),
-          backgroundColor: Colors.grey[800],
+          backgroundColor: BACKGROUND_COLOR,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           title: Row(
             children: [
               Text(
-                text,
+                actionText,
                 style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+                  fontSize: SUBTITLE_SIZE,
+                  color: COLOR_TEXT,
                 ),
               ),
               const Spacer(),
               IconButton(
                 icon: const Icon(
                   Icons.cancel,
-                  color: Colors.grey,
-                  size: 30,
+                  color: COLOR_ICON,
+                  size: ICON_SIZE,
                 ),
                 onPressed: () => Navigator.pop(context),
               )
@@ -195,7 +200,7 @@ class _TodoListState extends State<TodoList> {
                     style: const TextStyle(
                       fontSize: 18,
                       height: 1.5,
-                      color: Colors.white,
+                      color: COLOR_TEXT,
                     ),
                     initialValue: _formValues['title'],
                     autofocus: true,
@@ -219,7 +224,7 @@ class _TodoListState extends State<TodoList> {
                     style: const TextStyle(
                       fontSize: 18,
                       height: 1.5,
-                      color: Colors.white,
+                      color: COLOR_TEXT,
                     ),
                     initialValue: _formValues['description'],
                     autofocus: true,
@@ -245,22 +250,24 @@ class _TodoListState extends State<TodoList> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState?.save();
-                          if (action == 'create') {
-                            DatabaseService().createTask(
-                                title: _formValues['title']!.trim(),
-                                description: _formValues['description']?.trim(),
-                                audioRef: _formValues['audioRef']);
+                          TaskEntity task = TaskEntity(
+                              uid: '',
+                              title: _formValues['title']!.trim(),
+                              description: _formValues['description']?.trim(),
+                              audioRef: _formValues['audioRef'],
+                              isComplete: _formValues['isComplete']);
+                          if (action == FormAction.create) {
+                            DatabaseService().createTask(task);
                           }
-                          if (action == 'edit') {
+                          if (action == FormAction.edit) {
                             DatabaseService()
-                                .updateTask(_formValues['uid'], _formValues);
+                                .updateTask(_formValues['uid'], task);
                           }
-                          // If the form is valid, display a snackbar. In the real world,
-                          // you'd often call a server or save the information in a database.
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Updating task list'),
-                                backgroundColor: Colors.green),
+                                backgroundColor: BACKGROUND_SUCCESS),
                           );
                           Navigator.pop(context);
                         }

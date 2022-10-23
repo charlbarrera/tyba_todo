@@ -8,6 +8,7 @@ import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tyba_todo/services/database_services.dart';
+import 'package:tyba_todo/utils/constants.dart';
 
 /*
  * This is an example showing how to record to a Dart Stream.
@@ -61,7 +62,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   @override
   void initState() {
     if (remoteRef != null) {
-      DatabaseService().downloadAudio(remoteRef).then((String value) {
+      DatabaseService().downloadAudio(remoteRef!).then((String value) {
         setState(() {
           _path = value;
           _mplaybackReady = true;
@@ -210,10 +211,10 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
         children: [
           Container(
               height: 80,
-              child: Center(
+              child: const Center(
                   child: const Text(
                 'Voice Message',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: COLOR_TEXT),
               ))),
           Row(
             children: [
@@ -227,9 +228,9 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
                   icon: _mRecorder!.isRecording
                       ? const Icon(
                           Icons.stop_rounded,
-                          color: Colors.white,
+                          color: COLOR_TEXT,
                         )
-                      : const Icon(Icons.mic, color: Colors.white),
+                      : const Icon(Icons.mic, color: COLOR_ICON),
                 ),
               ),
               Container(
@@ -238,7 +239,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
                 height: 80,
                 alignment: Alignment.center,
                 child: IconButton(
-                    color: Color(0xFFFAF0E6),
+                    color: COLOR_ICON,
                     onPressed: getPlaybackFn(),
                     icon: Icon(
                         _mPlayer!.isPlaying

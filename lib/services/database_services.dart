@@ -11,50 +11,50 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('tasks');
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  Future createTask(
-      {required String title, String? description, dynamic audioRef}) async {
-    return await tasksCollection.add({
-      'title': title,
-      'description': description,
-      'audioRef': audioRef,
-      'isComplete': false,
-    });
+  Future createTask(TaskEntity task) async {
+    final taskDTO = task.toMap();
+    return await tasksCollection.add(taskDTO);
   }
 
   Future<String> saveAudio(String name, String path) async {
-    Reference audio = storage.ref('records').child('/$name');
     try {
+      Reference audio = storage.ref('records').child('/$name');
       await audio.putFile(File(path));
+      return name;
     } catch (e) {
-      print(e);
+      throw Exception('databaseService/saveAudio $e');
     }
-    return name;
   }
 
-  Future<String> downloadAudio(name) async {
-    final audioRef = storage.ref('records').child('/$name');
-
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final dir = appDocDir.absolute.path;
-    String filePath = "$dir/$name";
-    final file = File(filePath);
-
+  Future<String> downloadAudio(String name) async {
     try {
+      Reference audioRef = storage.ref('records').child('/$name');
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String dir = appDocDir.absolute.path;
+      String filePath = '$dir/$name';
+      File file = File(filePath);
       await audioRef.writeToFile(file);
+      return filePath;
     } catch (e) {
-      print(name);
-      print(e);
+      throw Exception('databaseService/downloadAudio $e');
     }
-
-    return filePath;
   }
 
-  Future updateTask(uid, task) async {
-    await tasksCollection.doc(uid).update({...task});
+  void updateTask(String uid, TaskEntity task) {
+    Map taskDTO = task.toMap();
+    try {
+      tasksCollection.doc(uid).update({...taskDTO});
+    } catch (e) {
+      throw Exception('databaseService/updateTask $e');
+    }
   }
 
-  Future removeTodo(uid) async {
-    await tasksCollection.doc(uid).delete();
+  void removeTodo(String uid) {
+    try {
+      tasksCollection.doc(uid).delete();
+    } catch (e) {
+      throw Exception('databaseService/removeTodo $e');
+    }
   }
 
   List<TaskEntity>? taskFromFirestore(QuerySnapshot snapshot) {

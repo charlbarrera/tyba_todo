@@ -19,8 +19,6 @@ class MyApp extends StatelessWidget {
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
-        FlutterError.onError =
-            FirebaseCrashlytics.instance.recordFlutterFatalError;
         if (snapshot.hasError) {
           return Scaffold(
             body: Center(child: Text(snapshot.error.toString())),
@@ -29,6 +27,8 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loading();
         }
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: TodoList(),
