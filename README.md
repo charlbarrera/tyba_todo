@@ -22,9 +22,11 @@ contenido de una tarea (no es necesario almacenarla) 👌🏾
 asumiendo que esta app fuera a llegar a producción. 👌🏾 (más detalles en la sección Services)
 6. Bono 2: Almacenar las notas de voz que se pueden grabar en el punto 4. 👌🏾 (más detalles en la sección Services). 
 
-<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426285-002d5314-dc2a-4d07-81b2-301c1a3aa47c.jpg" align="left"  width="300" ></a>
-<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426291-546ba2f5-c413-4098-a2f3-945598117e54.jpg " align="left"  width="300" ></a>
-<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426293-621d0a7d-01f5-488b-996a-b8e0e0c92eae.jpg" align="left"  width="300" ></a>
+
+<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426285-002d5314-dc2a-4d07-81b2-301c1a3aa47c.jpg" align="left" height="650px" width="300" ></a>
+<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426291-546ba2f5-c413-4098-a2f3-945598117e54.jpg " align="center" height="650px"  width="300" ></a>
+<a href="url"><img src="https://user-images.githubusercontent.com/30334217/197426293-621d0a7d-01f5-488b-996a-b8e0e0c92eae.jpg" align="right" height="650px"   width="300" ></a>
+
 
 
 
