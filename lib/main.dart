@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             FirebaseCrashlytics.instance.recordFlutterFatalError;
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: TodoList(),
+          home: const TodoList(),
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.grey[900],
             primarySwatch: Colors.pink,

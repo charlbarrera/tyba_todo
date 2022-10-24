@@ -39,9 +39,9 @@ const theSource = AudioSource.microphone;
 
 /// Example app.
 class SimpleRecorder extends StatefulWidget {
-  String? audioRef;
-  Function onSave;
-  SimpleRecorder({super.key, this.audioRef, required this.onSave});
+  final String? audioRef;
+  final Function onSave;
+  const SimpleRecorder({super.key, this.audioRef, required this.onSave});
   @override
   _SimpleRecorderState createState() => _SimpleRecorderState(audioRef, onSave);
 }
@@ -100,7 +100,6 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   Future<void> openTheRecorder() async {
     if (!kIsWeb) {
       var status = await Permission.microphone.request();
-      bool isShown = await Permission.contacts.shouldShowRequestRationale;
       if (status != PermissionStatus.granted) {
         await openAppSettings();
       }
